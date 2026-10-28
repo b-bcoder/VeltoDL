@@ -16,7 +16,7 @@ Downloads are saved on your computer. The app connects to the relevant online so
 
 ## Install
 
-Download the latest **Video Downloader Setup** from [GitHub Releases](https://github.com/b-bcoder/VeltoDL/releases/latest) and run the installer.
+Download the latest **VeltoDL setup** from [GitHub Releases](https://github.com/b-bcoder/VeltoDL/releases/latest) and run the installer.
 
 ## For developers
 

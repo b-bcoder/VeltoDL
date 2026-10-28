@@ -1,10 +1,10 @@
-# Video Downloader
+# VeltoDL
 
-Video Downloader is a simple Windows app for saving audio and video from supported links. Paste in one or more URLs, choose what you want to download, and save it to a folder on your computer.
+VeltoDL is a simple Windows app for saving audio and video from supported links. Paste in one or more URLs, choose what you want to download, and save it to a folder on your computer.
 
 No command line or complicated setup is needed. Check your links before downloading, choose audio or video and the quality that suits you, then follow each download's progress in the app.
 
-## Why use Video Downloader?
+## Why use VeltoDL?
 
 - **Straightforward to use:** add links, choose your options, and download from one place.
 - **Download your way:** choose audio, video, or a combined stream, and set a maximum video resolution.

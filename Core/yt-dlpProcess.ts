@@ -4,7 +4,8 @@ import type { DownloadSettings } from '../src/shared/types'
 export function buildYtDlpArgs(
   url: string,
   directory: string,
-  settings: DownloadSettings
+  settings: DownloadSettings,
+  ffmpegPath?: string
 ): string[] {
   const outputTemplate = join(directory, '%(title).200B [%(id)s].%(ext)s')
   const args = [
@@ -30,12 +31,12 @@ export function buildYtDlpArgs(
     args.push('-f', format)
   } else {
     const format = settings.videoQuality === 'best'
-      ? 'best'
-      : `best[height<=${settings.videoQuality}]`
+      ? 'bestvideo+bestaudio/best'
+      : `bestvideo[height<=${settings.videoQuality}]+bestaudio/best[height<=${settings.videoQuality}]`
     args.push('-f', format)
+    if (ffmpegPath) args.push('--ffmpeg-location', ffmpegPath)
   }
 
   args.push('--', url)
   return args
 }
-

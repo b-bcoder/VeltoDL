@@ -41,3 +41,21 @@ https://github.com/microlinkhq/youtube-dl-exec
 
 The wrapper's MIT license text is distributed with the npm package at
 node_modules/youtube-dl-exec/LICENSE.md.
+
+FFmpeg
+------
+This application bundles and launches FFmpeg 6.1.1 as a separate executable
+to merge separate audio and video streams. The Windows x64 static essentials
+build is provided by Gyan.dev through ffmpeg-static:
+https://github.com/eugeneware/ffmpeg-static/releases/tag/b6.1.1
+https://www.gyan.dev/ffmpeg/builds/
+
+This FFmpeg build is licensed under GNU GPL version 3. Its license and build
+configuration are included beside ffmpeg.exe in the installed application's
+resources\ffmpeg directory as ffmpeg.exe.LICENSE and ffmpeg.exe.README.
+The FFmpeg source revision identified by the build is:
+https://github.com/FFmpeg/FFmpeg/commit/e38092ef93
+
+The ffmpeg-static npm package is used only as a development/build dependency;
+its JavaScript package is not included in the application. Its license text
+is available at node_modules/ffmpeg-static/LICENSE.

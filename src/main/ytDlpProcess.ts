@@ -20,3 +20,15 @@ export function getYtDlpPath(): string {
   const executable = existsSync(unpackedBinary) ? unpackedBinary : packagedBinary
   return resolve(dirname(fileURLToPath(import.meta.url)), executable)
 }
+
+export function getFfmpegPath(): string {
+  if (app.isPackaged) {
+    return join(process.resourcesPath, 'ffmpeg', 'ffmpeg.exe')
+  }
+
+  const ffmpegPath = require('ffmpeg-static') as string | null
+  if (!ffmpegPath) {
+    throw new Error('The FFmpeg executable is not available for this platform.')
+  }
+  return ffmpegPath
+}

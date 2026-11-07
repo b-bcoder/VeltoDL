@@ -254,14 +254,14 @@ button:disabled, fieldset:disabled { cursor: not-allowed; }
 .destination-copy strong { color: #dce4ef; font-size: 11px; }
 .destination-copy span { overflow: hidden; color: var(--muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
 .destination-row .button { flex-shrink: 0; }
-.progress-list { display: grid; gap: 16px; margin-top: 19px; }
-.progress-item { display: grid; gap: 8px; }
-.progress-title-row { justify-content: space-between; gap: 10px; }
-.progress-title-row strong { overflow: hidden; color: #dce4ef; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.progress-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; min-width: 0; margin-top: 19px; }
+.progress-item { display: grid; min-width: 0; gap: 8px; }
+.progress-title-row { min-width: 0; justify-content: space-between; gap: 10px; }
+.progress-title-row strong { min-width: 0; overflow: hidden; color: #dce4ef; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
 .progress-state { flex-shrink: 0; color: var(--muted); font-size: 9px; text-transform: capitalize; }
 .progress-state.finished { color: var(--accent); }
 .progress-state.failed, .progress-state.cancelled { color: var(--danger); }
-.progress-track { height: 5px; overflow: hidden; border-radius: 5px; background: #263348; }
+.progress-track { min-width: 0; height: 5px; overflow: hidden; border-radius: 5px; background: #263348; }
 .progress-track span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #41bd9d, #8df0d6); transition: width .25s ease; }
 .progress-meta { justify-content: space-between; color: var(--muted); font-size: 9px; }
 .progress-error { margin: 0; color: #e39b9b; font-size: 10px; }

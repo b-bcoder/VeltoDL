@@ -219,7 +219,7 @@ export default function UI() {
             <legend className="field-label">Download type</legend>
             <div className="mode-options">
               {([
-                ['both', 'Video + audio', 'Combined stream'],
+                ['both', 'Video + audio', 'Separate streams merged as needed'],
                 ['video', 'Video only', 'Picture, no sound'],
                 ['audio', 'Audio only', 'Best available audio']
               ] as const).map(([mode, label, detail]) => (
@@ -273,7 +273,7 @@ export default function UI() {
             <p className="disabled-hint">Choose an output folder to unlock download options.</p>
           )}
           <p className="quality-note">
-            Downloads use formats provided by the source. Combining separate streams or converting audio may require FFmpeg.
+            Downloads use formats provided by the source. FFmpeg is included to combine separate video and audio streams.
           </p>
         </section>
       </div>

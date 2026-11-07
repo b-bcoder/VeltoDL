@@ -4,7 +4,7 @@ import type {
   DownloadProgress,
   ValidationResult
 } from '../src/shared/types'
-import { getYtDlpPath } from '../src/main/ytDlpProcess'
+import { getFfmpegPath, getYtDlpPath } from '../src/main/ytDlpProcess'
 import { buildYtDlpArgs } from './yt-dlpProcess'
 import type { DownloadSettings } from '../src/shared/types'
 
@@ -14,20 +14,29 @@ function parseEta(value: string): number | null {
   return Number(match[1] ?? 0) * 3600 + Number(match[2]) * 60 + Number(match[3])
 }
 
-function safeError(stderr: string): string {
-  if (/ffmpeg.*(?:not found|not installed|not available)/i.test(stderr)) {
-    return 'This source needs FFmpeg to merge or convert streams, but FFmpeg is not available.'
+function describeDownloadError(stderr: string, exitCode: number | null): string {
+  const lines = stderr
+    .replace(/\u001b\[[0-?]*[ -/]*[@-~]/g, '')
+    .split(/[\r\n]+/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+  const diagnostic = [...lines].reverse().find((line) => /\bERROR:/i.test(line)) ?? lines.at(-1)
+  const detail = diagnostic?.replace(/^ERROR:\s*/i, '')
+
+  if (/ffmpeg.*(?:not found|not installed|not available)|(?:not found|not installed).*ffmpeg/i.test(stderr)) {
+    return 'FFmpeg could not be found, so yt-dlp could not merge the video and audio streams. Check that the bundled FFmpeg file is present.'
   }
-  if (/timed?\s*out|network|connection|urlopen error|temporary failure/i.test(stderr)) {
-    return 'A network error interrupted this download. Check your connection and try again.'
+  if (/timed?\s*out|network|connection|urlopen error|temporary failure/i.test(detail ?? stderr)) {
+    return `A network error interrupted this download. ${detail ?? 'Check your connection and try again.'}`
   }
-  if (/requested format is not available|format is not available/i.test(stderr)) {
-    return 'The selected format is not available for this media.'
+  if (/requested format is not available|format is not available/i.test(detail ?? stderr)) {
+    return 'No compatible video and audio format was found for this media at the selected resolution. Try a lower maximum resolution or check whether the source is available.'
   }
-  if (/private video|sign in|login required|http error 403/i.test(stderr)) {
-    return 'The source requires access that is not available to the downloader.'
+  if (/private video|sign in|login required|http error 403/i.test(detail ?? stderr)) {
+    return `The source requires access that is not available to the downloader. ${detail ?? ''}`.trim()
   }
-  return 'The download failed. The media may be unavailable or no longer supported.'
+  if (detail) return `yt-dlp reported: ${detail}`
+  return `yt-dlp exited with code ${exitCode ?? 'unknown'} without reporting a reason.`
 }
 
 export class DownloadProcess {
@@ -75,7 +84,8 @@ export class DownloadProcess {
     onProgress: (progress: DownloadProgress) => void
   ): Promise<DownloadItemResult> {
     return new Promise((resolve) => {
-      const child = spawn(getYtDlpPath(), buildYtDlpArgs(item.url, directory, settings), {
+      const ffmpegPath = settings.mode === 'both' ? getFfmpegPath() : undefined
+      const child = spawn(getYtDlpPath(), buildYtDlpArgs(item.url, directory, settings, ffmpegPath), {
         windowsHide: true
       })
       this.currentChild = child
@@ -121,12 +131,24 @@ export class DownloadProcess {
         stderr = (stderr + chunk).slice(-16_384)
         processOutput(chunk, 'stderr')
       })
-      child.once('error', () => {
+      child.once('error', (error: NodeJS.ErrnoException) => {
+        const message = error.code === 'ENOENT'
+          ? 'yt-dlp could not be started because its executable could not be found.'
+          : `yt-dlp could not be started: ${error.message}`
+        onProgress({
+          url: item.url,
+          title: item.title,
+          percent: null,
+          speed: null,
+          etaSeconds: null,
+          status: 'failed',
+          error: message
+        })
         finish({
           url: item.url,
           title: item.title,
           status: 'failed',
-          error: 'yt-dlp could not be started. Please restart the application.'
+          error: message
         })
       })
       child.once('close', (code) => {
@@ -151,7 +173,7 @@ export class DownloadProcess {
           })
           finish({ url: item.url, title: item.title, status: 'success' })
         } else {
-          const error = safeError(stderr)
+          const error = describeDownloadError(stderr, code)
           onProgress({
             url: item.url,
             title: item.title,

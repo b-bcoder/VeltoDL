@@ -26,7 +26,9 @@ Requires Node.js 20 or newer. Run `npm install` and then `npm run dev` to start 
 Video Downloader uses [yt-dlp](https://github.com/yt-dlp/yt-dlp). See [THIRD_PARTY_NOTICES.txt](./THIRD_PARTY_NOTICES.txt) for third-party notices.
 
 
-#Screenshots
+
+
+# Screenshots
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/6a66e123-7665-40bb-99b1-7caf228f166c" />
 <img width="1920" height="1080" alt="Schermafbeelding 2026-11-07 024921" src="https://github.com/user-attachments/assets/c32d882c-eac9-49f8-be16-3fbfea29da78" />
 <img width="1920" height="1080" alt="Schermafbeelding 2026-11-07 024938" src="https://github.com/user-attachments/assets/2c9e6e95-7005-4f61-ae51-71a773a1e059" />
